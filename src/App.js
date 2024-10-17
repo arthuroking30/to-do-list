@@ -82,7 +82,7 @@ export default function App() {
 	const [toDoLists, setToDoLists] = useState(initialToDoLists);
 	const [showAddForm, setShowAddForm] = useState(false);
 	const [page, setPage] = useState(0);
-	const [width, height] = useWindowSize();
+	const [width] = useWindowSize();
 	const numListsPerPage = width <= 676 ? 4 : 6;
 	const pageList = getCurList(page);
 
