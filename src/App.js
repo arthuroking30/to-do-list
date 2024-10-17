@@ -1,65 +1,69 @@
-import { useLayoutEffect, useState } from 'react';
-
-const initialToDoLists = [
-	{
-		id: 'b32e784e-8dc4-4f23-bb16-dfae9bc2e2b1',
-		title: 'How to plant a garden',
-		steps: [
-			'Choose a location',
-			'Prepare the soil',
-			'Plant seeds',
-			'Water regularly',
-			'Maintain garden',
-		],
-	},
-	{
-		id: 'c48f990a-42f3-4e89-a76b-ff6eabdc4a7a',
-		title: 'How to change a tire',
-		steps: [
-			'Gather tools',
-			'Loosen lug nuts',
-			'Lift car with jack',
-			'Remove old tire',
-			'Place new tire',
-			'Tighten lug nuts',
-		],
-	},
-	{
-		id: 'd65b193a-a78d-452c-b916-3389e1d6d2c3',
-		title: 'How to create a budget',
-		steps: [
-			'List income sources',
-			'List monthly expenses',
-			'Calculate savings',
-			'Allocate for goals',
-			'Review and adjust',
-		],
-	},
-	{
-		id: 'f03c236e-3e7d-4ff4-bb49-bd2ed9cd1b98',
-		title: 'How to paint a wall',
-		steps: [
-			'Gather supplies',
-			'Prep the wall',
-			'Apply primer',
-			'Paint the wall',
-			'Clean up',
-		],
-	},
-	{
-		id: 'e17d645b-6d8f-4264-9f03-7469f264d1d4',
-		title: 'How to write a resume',
-		steps: [
-			'Choose a format',
-			'List contact information',
-			'Add work experience',
-			'Add education',
-			'Review and edit',
-		],
-	},
-];
-
-const numListsPerPage = 4;
+import { useLayoutEffect, useState, useEffect } from 'react';
+let initialToDoLists;
+if (localStorage.getItem('initialized')) {
+	initialToDoLists = JSON.parse(localStorage.getItem('toDoLists'));
+} else {
+	localStorage.setItem('initialized', true);
+	initialToDoLists = [
+		{
+			id: 'b32e784e-8dc4-4f23-bb16-dfae9bc2e2b1',
+			title: 'How to plant a garden',
+			steps: [
+				'Choose a location',
+				'Prepare the soil',
+				'Plant seeds',
+				'Water regularly',
+				'Maintain garden',
+			],
+		},
+		{
+			id: 'c48f990a-42f3-4e89-a76b-ff6eabdc4a7a',
+			title: 'How to change a tire',
+			steps: [
+				'Gather tools',
+				'Loosen lug nuts',
+				'Lift car with jack',
+				'Remove old tire',
+				'Place new tire',
+				'Tighten lug nuts',
+			],
+		},
+		{
+			id: 'd65b193a-a78d-452c-b916-3389e1d6d2c3',
+			title: 'How to create a budget',
+			steps: [
+				'List income sources',
+				'List monthly expenses',
+				'Calculate savings',
+				'Allocate for goals',
+				'Review and adjust',
+			],
+		},
+		{
+			id: 'f03c236e-3e7d-4ff4-bb49-bd2ed9cd1b98',
+			title: 'How to paint a wall',
+			steps: [
+				'Gather supplies',
+				'Prep the wall',
+				'Apply primer',
+				'Paint the wall',
+				'Clean up',
+			],
+		},
+		{
+			id: 'e17d645b-6d8f-4264-9f03-7469f264d1d4',
+			title: 'How to write a resume',
+			steps: [
+				'Choose a format',
+				'List contact information',
+				'Add work experience',
+				'Add education',
+				'Review and edit',
+			],
+		},
+	];
+	localStorage.setItem('toDoLists', JSON.stringify(initialToDoLists));
+}
 
 function useWindowSize() {
 	const [size, setSize] = useState([0, 0]);
@@ -81,6 +85,11 @@ export default function App() {
 	const [width, height] = useWindowSize();
 	const numListsPerPage = width <= 676 ? 4 : 6;
 	const pageList = getCurList(page);
+
+	//save toDoLists to local storage
+	useEffect(() => {
+		localStorage.setItem('toDoLists', JSON.stringify(toDoLists));
+	}, [toDoLists]);
 
 	function handlePageUp() {
 		setPage(page => page + 1);
@@ -257,6 +266,7 @@ function ToDoList({ list, onDeleteList }) {
 		</div>
 	);
 }
+
 function Step({ step }) {
 	const [checked, setChecked] = useState(false);
 	function handleChange() {
